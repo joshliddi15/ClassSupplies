@@ -1,0 +1,58 @@
+﻿@page "/supplies/detail/{stringId}"
+@using Classroom_supplies.Model
+@inject ClassroomSupplyService SupplyService
+@inject NavigationManager NavigationManager
+
+<h1>Supply Details</h1>
+
+@if (supply != null)
+{
+    <dl>
+        <dt>Name</dt>
+        <dd>@supply.Name</dd>
+        <dt>Category</dt>
+        <dd>@supply.SupplyCategory</dd>
+        <dt>Quantity</dt>
+        <dd>@supply.Quantity</dd>
+        <dt>Unit</dt>
+        <dd>@supply.Unit</dd>
+        <dt>Unit Price</dt>
+        <dd>@supply.UnitPrice.ToString("C")</dd>
+        <dt>Supplier</dt>
+        <dd>@supply.Supplier</dd>
+        <dt>Purchase Date</dt>
+        <dd>@supply.PurchaseDate.ToShortDateString()</dd>
+        <dt>Location</dt>
+        <dd>@supply.Location</dd>
+    </dl>
+}
+else
+{
+    <p>Supply not found.</p>
+}
+
+<button @onclick="GoBack" class="btn btn-secondary">Back</button>
+<button class="btn btn-primary" @onclick="EditSupply">Edit</button>
+
+@code {
+    private NavigationManager NavigationManger;
+    private ClassroomSupply supply;
+
+    [Parameter]
+    public string stringId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        supply = await SupplyService.GetSupplyAsync(int.Parse(stringId));
+    }
+
+    private void EditSupply()
+    {
+        NavigationManager.NavigateTo($"/supplies/edit/{stringId}");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/supplies");
+    }
+}

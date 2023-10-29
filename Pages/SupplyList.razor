@@ -1,0 +1,56 @@
+﻿@page "/supplies"
+@using ClassSupplies.Data
+@using ClassSupplies.Migrations
+@using Classroom_supplies.Model
+@inject ClassroomSupplyService SupplyService
+
+<PageTitle>Supplies</PageTitle>
+
+<h1>Classroom Supplies List</h1>
+
+@if (supplies == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="/supplies/add">Add new supply</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Supply Category</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Unit Price</th>
+                <th>Supplier</th>
+                <th>Purchase Date</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var supply in supplies)
+            {
+                <tr>
+                    <td><a href="/supplies/detail/@supply.Id">@supply.Name</a></td>
+                    <td>@supply.SupplyCategory</td>
+                    <td>@supply.Quantity</td>
+                    <td>@supply.Unit</td>
+                    <td>@supply.UnitPrice</td>
+                    <td>@supply.Supplier</td>
+                    <td>@supply.PurchaseDate.ToShortDateString()</td>
+                    <td>@supply.Location</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ClassroomSupply> supplies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        supplies = await SupplyService.GetSuppliesAsync();
+    }
+}
